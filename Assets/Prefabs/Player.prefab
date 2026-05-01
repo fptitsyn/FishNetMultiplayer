@@ -813,6 +813,7 @@ GameObject:
   - component: {fileID: -7628443911098862674}
   - component: {fileID: 7505252396995277737}
   - component: {fileID: 3426169042355757382}
+  - component: {fileID: 6162799879643407522}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -924,7 +925,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8483076605628575338}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bc31f6c226efa6c44b1b942765d5cd4d, type: 3}
   m_Name: 
@@ -1012,6 +1013,23 @@ MonoBehaviour:
     Rotation: {x: 0, y: 0, z: 0, w: 0}
     Scale: {x: 0, y: 0, z: 0}
     IsValid: 0
+--- !u!114 &6162799879643407522
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8483076605628575338}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a79e5af44ff4861857e1a72ed25ab63, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Network.PlayerMovementPredicted
+  _componentIndexCache: 255
+  _addedNetworkObject: {fileID: 3426169042355757382}
+  _networkObjectCache: {fileID: 0}
+  _speed: 5
+  _gravity: -9.81
 --- !u!1 &8908421454969988977
 GameObject:
   m_ObjectHideFlags: 0
