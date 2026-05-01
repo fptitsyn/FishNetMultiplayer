@@ -24,7 +24,7 @@ namespace UI
 
         public void StartAsHost()
         {
-            SaveNickname();
+            // SaveNickname();
             // Хост одновременно является сервером и клиентом.
             networkManager.ServerManager.StartConnection();
             HostStarted?.Invoke();

@@ -27,9 +27,10 @@ namespace Network
             {
                 SubmitNicknameServerRpc(ConnectionUI.PlayerNickname);
             }
-        
+            
             if (IsServerInitialized)
             {
+                IsAlive.Value = true;
                 transform.position = new Vector3(
                     Random.Range(-3f, 3f),
                     0.4f,
