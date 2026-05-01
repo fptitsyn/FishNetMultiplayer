@@ -28,7 +28,7 @@ namespace UI
             // Хост одновременно является сервером и клиентом.
             networkManager.ServerManager.StartConnection();
             HostStarted?.Invoke();
-            gameObject.SetActive(false);
+            // gameObject.SetActive(false);
         }
 
         public void StartAsClient()

@@ -15,22 +15,16 @@ namespace Network
 
         public Action PlayerDied;
     
-        // Ник должен быть виден всем клиентам, но менять его может только сервер.
-        public SyncVar<string> Nickname = new();
-
-        // HP тоже читает каждый клиент, но изменяется только на сервере.
+        public readonly SyncVar<string> Nickname = new();
         public readonly SyncVar<int> HP = new(100);
-    
         public readonly SyncVar<int> Ammo = new(30);
-    
         public readonly SyncVar<bool> IsAlive = new(true);
 
-        public override void OnStartClient()
+        public override void OnStartNetwork()
         {
-            base.OnStartClient();
+            base.OnStartNetwork();
             if (Owner.IsLocalClient)
             {
-                // Только владелец отправляет на сервер свой локально введенный ник.
                 SubmitNicknameServerRpc(ConnectionUI.PlayerNickname);
             }
         
@@ -42,9 +36,18 @@ namespace Network
                     0
                 );
             }
+
+            HP.OnChange += OnHpChanged;
+            IsAlive.OnChange += OnIsAliveChanged;
         }
 
-        private void HP_OnChange(int oldValue, int newValue, bool asServer)
+        public override void OnStopNetwork()
+        {
+            HP.OnChange -= OnHpChanged;
+            IsAlive.OnChange -= OnIsAliveChanged;
+        }
+        
+        private void OnHpChanged(int oldValue, int newValue, bool asServer)
         {
             if (!asServer) return;
             if (newValue <= 0 && IsAlive.Value)
@@ -58,7 +61,6 @@ namespace Network
         [ServerRpc(RequireOwnership = false)]
         private void SubmitNicknameServerRpc(string nickname)
         {
-            // Сервер нормализует ник и записывает итоговое значение в NetworkVariable.
             string safeValue = string.IsNullOrWhiteSpace(nickname) ? $"Player_{OwnerId}" : nickname.Trim();
             Nickname.Value = safeValue;
         }
@@ -77,7 +79,7 @@ namespace Network
             IsAlive.Value = true;
         }
     
-        private void IsAlive_OnChange(bool prev, bool next, bool asServer)
+        private void OnIsAliveChanged(bool prev, bool next, bool asServer)
         {
             if (model == null)
             {

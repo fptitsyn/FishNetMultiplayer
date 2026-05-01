@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using FishNet;
-using FishNet.Managing;
 using Objects;
-using UI;
 using FishNet.Object;
-using FishNet.Transporting;
 using UnityEngine;
 
 namespace Network
@@ -16,58 +12,34 @@ namespace Network
         [SerializeField] private Transform[] spawnPoints;
         [SerializeField] private float respawnDelay = 10f;
 
-        private void OnEnable()
+        private void Start()
         {
-            ConnectionUI.HostStarted += OnHostStarted;
+            if (!InstanceFinder.IsServer) return;
+            SpawnAll();
         }
 
-        private void OnDisable()
+        public void OnPickedUp(Vector3 pos)
         {
-            ConnectionUI.HostStarted -= OnHostStarted;
-        }
-
-        private void OnServerConnectionState(ServerConnectionStateArgs args)
-        {
-            if (NetworkManager.Singleton != null &&
-                NetworkManager.Singleton.IsServer)
-            {
-                SpawnAll();
-            }
-        }
-
-        public void OnPickedUp(Vector3 position)
-        {
-            StartCoroutine(Respawn(position));
+            StartCoroutine(Respawn(pos));
         }
 
         private IEnumerator Respawn(Vector3 pos)
         {
             yield return new WaitForSeconds(respawnDelay);
-            SpawnPickup(pos);
+            Spawn(pos);
         }
 
-        private void SpawnPickup(Vector3 pos)
+        private void Spawn(Vector3 pos)
         {
-            if (!healthPickupPrefab)
-            {
-                Debug.LogError("Pickup prefab not assigned!");
-                return;
-            }
-
             var go = Instantiate(healthPickupPrefab, pos, Quaternion.identity);
-
             go.GetComponent<FirstAid>().Init(this);
-            var networkObject = go.GetComponent<NetworkObject>();
-            InstanceFinder.ServerManager.Spawn(networkObject);
+            InstanceFinder.ServerManager.Spawn(go);
         }
 
         private void SpawnAll()
         {
-            foreach (var point in spawnPoints)
-            {
-                SpawnPickup(point.position);
-                Debug.Log("SpawnAll called, points: " + spawnPoints.Length);
-            }
+            foreach (var p in spawnPoints)
+                Spawn(p.position);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using Network;
 using TMPro;
 using Unity.Collections;
@@ -15,24 +16,31 @@ namespace UI
         [SerializeField] private TMP_Text ammoText;
         [SerializeField] private TMP_Text respawnTimerText;
         
-        public override void OnStartClient()
-        {
-            playerNetwork.Nickname.OnValueChanged += OnNicknameChanged;
-            playerNetwork.HP.OnValueChanged += OnHpChanged;
-            playerNetwork.Ammo.OnValueChanged += OnAmmoChanged;
-            playerNetwork.PlayerDied += HandleRespawnTimer;
+        // public override void OnStartClient()
+        // {
+        //     playerNetwork.Nickname.OnValueChanged += OnNicknameChanged;
+        //     playerNetwork.HP.OnValueChanged += OnHpChanged;
+        //     playerNetwork.Ammo.OnValueChanged += OnAmmoChanged;
+        //     playerNetwork.PlayerDied += HandleRespawnTimer;
+        //
+        //     OnNicknameChanged(default, playerNetwork.Nickname.Value);
+        //     OnHpChanged(0, playerNetwork.HP.Value);
+        //     OnAmmoChanged(0, playerNetwork.Ammo.Value);
+        // }
+        //
+        // public override void OnNetworkDespawn()
+        // {
+        //     playerNetwork.Nickname.OnValueChanged -= OnNicknameChanged;
+        //     playerNetwork.HP.OnValueChanged -= OnHpChanged;
+        //     playerNetwork.Ammo.OnValueChanged -= OnAmmoChanged;
+        //     playerNetwork.PlayerDied -= HandleRespawnTimer;
+        // }
 
-            OnNicknameChanged(default, playerNetwork.Nickname.Value);
-            OnHpChanged(0, playerNetwork.HP.Value);
-            OnAmmoChanged(0, playerNetwork.Ammo.Value);
-        }
-
-        public override void OnNetworkDespawn()
+        private void Update()
         {
-            playerNetwork.Nickname.OnValueChanged -= OnNicknameChanged;
-            playerNetwork.HP.OnValueChanged -= OnHpChanged;
-            playerNetwork.Ammo.OnValueChanged -= OnAmmoChanged;
-            playerNetwork.PlayerDied -= HandleRespawnTimer;
+            nicknameText.text = playerNetwork.Nickname.Value;
+            hpText.text = $"HP: {playerNetwork.HP.Value}";
+            ammoText.text = $"Ammo: {playerNetwork.Ammo.Value}";
         }
 
         private void OnNicknameChanged(FixedString32Bytes oldValue, FixedString32Bytes newValue)
